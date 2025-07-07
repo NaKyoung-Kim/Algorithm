@@ -8,15 +8,15 @@ public class Main {
 		int N = sc.nextInt();
 		int[] T = new int[N]; // 걸리는 날짜
 		int[] P = new int[N]; // 금액
-		for(int i=0;i<N;i++) {
+		for (int i=0; i<N; i++) {
 			T[i] = sc.nextInt();	
 			P[i] = sc.nextInt();	
 		}
 		
 		int[] result = new int[N+1];
 		
-		for(int i=0;i<N;i++) {
-			 if(i+T[i] <= N) { 
+		for (int i=0; i<N; i++) {
+			 if (i+T[i] <= N) { 
 				 result[i+T[i]] = Math.max(result[i+T[i]], result[i]+P[i]);	
 			 }
 			 result[i+1] = Math.max(result[i+1], result[i]);

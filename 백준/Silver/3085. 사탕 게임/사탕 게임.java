@@ -1,63 +1,88 @@
 import java.io.*;
 
 public class Main {
-    static int n;
-    static char[][] board;
-    static int answer = 0;
-
+    
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        board = new char[n][n];
+        int N = Integer.parseInt(br.readLine());
+        char[][] board = new char[N][N];
 
-        for (int i = 0; i < n; i++) {
-            board[i] = br.readLine().toCharArray();
-        }
-
-        // 모든 인접쌍 교환
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                // 오른쪽 교환
-                if (j + 1 < n) {
-                    change(i, j, i, j + 1);
-                    check();
-                    change(i, j, i, j + 1);
-                }
-                // 아래쪽 교환
-                if (i + 1 < n) {
-                    change(i, j, i + 1, j);
-                    check();
-                    change(i, j, i + 1, j);
-                }
+        // board 정보 입력
+        for (int i = 0; i < N; i++) {
+            String str = br.readLine();
+            for (int j = 0; j < N; j++) {
+                board[i][j] = str.charAt(j);
             }
         }
 
-        System.out.println(answer);
-    }
+        int maxCnt = countCandy(board);
 
-    // 보드의 최대 연속 부분의 길이 체크
-    static void check() {
-        for (int i = 0; i < n; i++) {
-            int cnt = 1;
-            for (int j = 1; j < n; j++) {
-                if (board[i][j] == board[i][j - 1]) cnt++;
-                else cnt = 1;
-                if (cnt > answer) answer = cnt;
+        // board 정보 바꿔가면서 countCandy
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N-1; j++) {
+                char swap1 = board[i][j];
+                char swap2 = board[i][j+1];
+                board[i][j] = swap2;
+                board[i][j+1] = swap1;
+
+                int tempCnt = countCandy(board);
+                maxCnt = maxCnt > tempCnt ? maxCnt : tempCnt;
+
+                board[i][j] = swap1;
+                board[i][j+1] = swap2;
             }
         }
-        for (int j = 0; j < n; j++) {
-            int cnt = 1;
-            for (int i = 1; i < n; i++) {
-                if (board[i][j] == board[i - 1][j]) cnt++;
-                else cnt = 1;
-                if (cnt > answer) answer = cnt;
+        for (int i = 0; i < N-1; i++) {
+            for (int j = 0; j < N; j++) {
+                char swap1 = board[i][j];
+                char swap2 = board[i+1][j];
+
+                board[i][j] = swap2;
+                board[i+1][j] = swap1;
+
+                int tempCnt = countCandy(board);
+                maxCnt = maxCnt > tempCnt ? maxCnt : tempCnt;
+
+                board[i][j] = swap1;
+                board[i+1][j] = swap2;
             }
         }
+        System.out.println(maxCnt);
     }
 
-    static void change(int x1, int y1, int x2, int y2) {
-        char tmp = board[x1][y1];
-        board[x1][y1] = board[x2][y2];
-        board[x2][y2] = tmp;
+    /**
+     * 입력받은 board에서 사탕의 최대 개수 return
+     * @param board
+     * @return
+     */
+    static int countCandy(char[][] board) {
+        int N = board.length;
+        int maxCnt = 0;
+
+        for (int i = 0; i < N; i++) {
+            int temp = 1;
+            for (int j = 1; j < N; j++) {
+                if (board[i][j] == board[i][j-1]) {
+                    temp += 1;
+                    maxCnt = maxCnt > temp ? maxCnt : temp;
+                } 
+                else temp = 1;
+            }
+            
+        }
+
+        for (int j = 0; j < N; j++) {
+            int temp = 1;
+            for (int i = 1; i < N; i++) {
+                if (board[i][j] == board[i-1][j]) {
+                    temp += 1;
+                    maxCnt = maxCnt > temp ? maxCnt : temp;
+                } 
+                else temp = 1;
+            }
+            maxCnt = maxCnt > temp ? maxCnt : temp;
+        }
+        return maxCnt;
     }
+    
 }

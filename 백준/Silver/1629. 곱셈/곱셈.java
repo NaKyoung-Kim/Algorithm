@@ -20,11 +20,11 @@ public class Main {
         a = a % C;
 
         while (b > 0) {
-            if ((b & 1) == 1) { // b가 홀수일 때
+            if ((b & 1) == 1) { // b가 홀수
                 result = (result * a) % C;
             }
             a = (a * a) % C;
-            b >>= 1; // b를 절반으로 줄임
+            b >>= 1; // b를 반으로 줄임
         }
         return result;
     }
